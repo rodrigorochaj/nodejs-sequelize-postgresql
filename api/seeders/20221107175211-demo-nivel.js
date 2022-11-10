@@ -1,10 +1,7 @@
-"use strict";
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert(
-      "People",
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.bulkInsert(
+      "Niveis",
       [
         {
           descr_nivel: "básico",
@@ -26,7 +23,7 @@ module.exports = {
     );
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("People", null, {});
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete("Niveis", null, {});
   },
 };

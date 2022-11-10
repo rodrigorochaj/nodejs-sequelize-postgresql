@@ -1,5 +1,4 @@
 const database = require("../models");
-const pessoa = require("../models/pessoa");
 
 class PessoaController {
   static async buscarTodasPessoas(req, res) {
@@ -29,7 +28,7 @@ class PessoaController {
       const novaPessoaCriada = await database.pessoa.create(novaPessoa);
       return res.status(200).json(novaPessoaCriada);
     } catch (error) {
-      return res.statuts(500).json(error.message);
+      return res.status(500).json(error.message);
     }
   }
 
@@ -54,6 +53,62 @@ class PessoaController {
       return res.status(200).json({ message: "Deletado com sucesso !" });
     } catch (error) {
       return res.statuts(500).json(error.message);
+    }
+  }
+
+  static async buscaMatricula(req, res) {
+    const { estudanteId, matriculaId } = req.params;
+    try {
+      const matricula = await database.Matriculas.findOne({
+        where: {
+          id: Number(matriculaId),
+          estudante_id: Number(estudanteId),
+        },
+      });
+      return res.status(200).json(matricula);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async criarMatricula(req, res) {
+    const { estudanteId } = req.params;
+    const novaMatricula = { ...req.body, estudante_id: Number(estudanteId) };
+    try {
+      const novaMatriculaCriada = await database.Matriculas.create(
+        novaMatricula
+      );
+      return res.status(200).json(novaMatriculaCriada);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async atualizarMatricula(req, res) {
+    const { estudanteId, matriculaId } = req.params;
+    const novosDadosMatricula = req.body;
+    try {
+      await database.Matriculas.update(novosDadosMatricula, {
+        where: { id: Number(matriculaId), estudante_id: Number(estudanteId) },
+      });
+      const matriculaAtualizada = await database.Matriculas.findOne({
+        where: { id: Number(matriculaId) },
+      });
+      return res.status(200).json(matriculaAtualizada);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async deletarMatricula(req, res) {
+    const { matriculaId } = req.params;
+    try {
+      await database.Matriculas.destroy({
+        where: { id: Number(matriculaId) },
+      });
+      return res.status(200).json({ message: "Deletado com sucesso !" });
+    } catch (error) {
+      return res.status(500).json(error.message);
     }
   }
 }
